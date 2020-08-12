@@ -1,9 +1,13 @@
 package bot
 
 import (
+	"io/ioutil"
+	"net/http"
 	"regexp"
+	"strings"
 
 	"github.com/admirallarimda/tgbotbase"
+	"github.com/ilyalavrinov/tgbot-mtgbulkbuy/internal/log"
 	tgbotapi "gopkg.in/telegram-bot-api.v4"
 )
 
@@ -26,9 +30,21 @@ func (h *searchHandler) Name() string {
 }
 
 func (h *searchHandler) HandleOne(msg tgbotapi.Message) {
-	_ = msg.Text
+	resp, err := http.Post("http://127.0.0.1:8000/bulk", "text/plain", strings.NewReader(msg.Text))
 
-	replyMsg := "Out of Order, come again later"
+	var replyMsg string
+	if err != nil {
+		replyMsg = err.Error()
+	} else {
+		defer resp.Body.Close()
+		b, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			replyMsg = "Something went wrong, please contact the admin"
+			log.Errorw("Error while reading response", "err", err)
+		} else {
+			replyMsg = string(b)
+		}
+	}
 
 	reply := tgbotapi.NewMessage(msg.Chat.ID, replyMsg)
 	reply.BaseChat.ReplyToMessageID = msg.MessageID
