@@ -2,12 +2,12 @@ package bot
 
 import (
 	"io/ioutil"
-	"net/http"
 	"regexp"
 	"strings"
 
 	"github.com/admirallarimda/tgbotbase"
-	"github.com/ilyalavrinov/tgbot-mtgbulkbuy/internal/log"
+	"github.com/ilyalavrinov/mtgbulkbuy/pkg/mtgbulk"
+	"github.com/tealeg/xlsx"
 	tgbotapi "gopkg.in/telegram-bot-api.v4"
 )
 
@@ -30,23 +30,35 @@ func (h *searchHandler) Name() string {
 }
 
 func (h *searchHandler) HandleOne(msg tgbotapi.Message) {
-	resp, err := http.Post("http://127.0.0.1:8000/bulk", "text/plain", strings.NewReader(msg.Text))
-
-	var replyMsg string
+	r := strings.NewReader(msg.Text)
+	res, err := mtgbulk.ProcessText(r)
+	var reply tgbotapi.Chattable
 	if err != nil {
-		replyMsg = err.Error()
+		r := tgbotapi.NewMessage(msg.Chat.ID, err.Error())
+		r.BaseChat.ReplyToMessageID = msg.MessageID
+		reply = r
 	} else {
-		defer resp.Body.Close()
-		b, err := ioutil.ReadAll(resp.Body)
+		fxls := xlsx.NewFile()
+		sh, err := fxls.AddSheet("min_prices_all")
 		if err != nil {
-			replyMsg = "Something went wrong, please contact the admin"
-			log.Errorw("Error while reading response", "err", err)
+			r := tgbotapi.NewMessage(msg.Chat.ID, err.Error())
+			r.BaseChat.ReplyToMessageID = msg.MessageID
+			reply = r
 		} else {
-			replyMsg = string(b)
+			minPrices := make(map[string]int, len(res.MinPricesNoDelivery))
+			for card, pp := range res.MinPricesNoDelivery {
+				minPrices[card] = int(pp[0].Price)
+			}
+			t := mtgbulk.NewPossessionTable(res.MinPricesMatrix)
+			t.ToXlsxSheet(sh, minPrices)
 		}
+
+		f, err := ioutil.TempFile("", "*-mtgbulk.xlsx")
+		fxls.Write(f)
+		f.Close()
+
+		reply = tgbotapi.NewDocumentUpload(msg.Chat.ID, f.Name())
 	}
 
-	reply := tgbotapi.NewMessage(msg.Chat.ID, replyMsg)
-	reply.BaseChat.ReplyToMessageID = msg.MessageID
 	h.OutMsgCh <- reply
 }
