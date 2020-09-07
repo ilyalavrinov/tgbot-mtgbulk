@@ -12,7 +12,7 @@ require (
 	github.com/go-openapi/errors v0.19.6 // indirect
 	github.com/go-redis/redis v6.15.9+incompatible // indirect
 	github.com/golang/protobuf v1.4.2 // indirect
-	github.com/ilyalavrinov/mtgbulkbuy v0.0.4
+	github.com/ilyalavrinov/mtgbulkbuy v0.0.5
 	github.com/mitchellh/mapstructure v1.3.3 // indirect
 	github.com/tealeg/xlsx v1.0.5
 	github.com/technoweenie/multipartstreamer v1.0.1 // indirect
