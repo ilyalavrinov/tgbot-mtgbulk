@@ -114,6 +114,8 @@ github.com/ilyalavrinov/mtgbulkbuy v0.0.5 h1:TroPkvBrD6o41V5WipHBPrgLkt7aky0drb+
 github.com/ilyalavrinov/mtgbulkbuy v0.0.5/go.mod h1:aG3lrVU3IrekCyENKIdqm9cHDUZqUiXrTKFor+4smWI=
 github.com/ilyalavrinov/mtgbulkbuy v0.0.6 h1:mJfqn4rYjGteCp6gvAfoVdmmDB94n+w73FDYYhC6QXU=
 github.com/ilyalavrinov/mtgbulkbuy v0.0.6/go.mod h1:MUGyJA8j9R+oBccUY/n3bKdKNKFo7Iq1PDEMaxCXoT4=
+github.com/ilyalavrinov/mtgbulkbuy v0.0.7 h1:WCEhJV5etPAgH7d7Zfyc96FLh5Fb75jaqjC0yJU3XPY=
+github.com/ilyalavrinov/mtgbulkbuy v0.0.7/go.mod h1:MUGyJA8j9R+oBccUY/n3bKdKNKFo7Iq1PDEMaxCXoT4=
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=
 github.com/jedib0t/go-pretty v4.3.0+incompatible h1:CGs8AVhEKg/n9YbUenWmNStRW2PHJzaeDodcfvRAbIo=
 github.com/jedib0t/go-pretty v4.3.0+incompatible/go.mod h1:XemHduiw8R651AF9Pt4FwCTKeG3oo7hrHJAoznj9nag=
